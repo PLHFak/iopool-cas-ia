@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}img{max-width:100%}</style>
+<title>Cas support iopool</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f6f8f7;--surface:#ffffff;--ink:#17262a;--muted:#5b6d72;--line:#d9e1e2;
+  --teal:#137a7a;--teal-soft:#e2f0ef;--hl:#ffe45c;--hl-ink:#5a4a00;
+  --red:#c0392b;--red-soft:#fbe9e6;--amber:#b7791f;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1719;--surface:#172225;--ink:#e6eeef;--muted:#9fb1b5;--line:#2a393d;
+    --teal:#4fbdb6;--teal-soft:#123a3a;--hl:#e0c23a;--hl-ink:#1a1500;
+    --red:#ef7a6c;--red-soft:#3a1d1a;--amber:#e0a94a;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1719;--surface:#172225;--ink:#e6eeef;--muted:#9fb1b5;--line:#2a393d;
+  --teal:#4fbdb6;--teal-soft:#123a3a;--hl:#e0c23a;--hl-ink:#1a1500;
+  --red:#ef7a6c;--red-soft:#3a1d1a;--amber:#e0a94a;color-scheme:dark;
+}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.55;margin:0;padding-block:0 64px;padding-inline:20px}
+.wrap{max-width:1080px;margin:0 auto}
+header{padding-block:48px 28px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+h1{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;font-size:clamp(28px,4vw,40px);line-height:1.15;margin:8px 0 12px;text-wrap:balance}
+.lede{font-size:18px;color:var(--muted);max-width:66ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:20px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted)}
+h2{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;font-size:26px;margin:56px 0 6px;text-wrap:balance}
+h2 + p.sub{color:var(--muted);margin:0 0 24px;max-width:66ch}
+h3{font-size:15px;font-weight:600;margin:0 0 6px;letter-spacing:.01em}
+mark{background:var(--hl);color:var(--hl-ink);padding:0 3px;border-radius:2px}
+.legend{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);margin-top:14px}
+.legend i{display:inline-block;width:18px;height:12px;background:var(--hl);border:1px solid #d1b100}
+
+.tl{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+figure img{width:100%;height:auto;display:block;border-bottom:1px solid var(--line)}
+figcaption{padding:12px 14px 14px;font-size:14px;line-height:1.45}
+figcaption .t{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--teal);display:block;margin-bottom:4px}
+figure.claude{border-color:var(--teal)}
+figure.claude .t{color:var(--teal)}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+@media (max-width:720px){.split{grid-template-columns:1fr}}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+.col.hd{border-top:4px solid var(--red)}
+.col.cl{border-top:4px solid var(--teal)}
+.col h3{font-size:17px;margin-bottom:10px}
+.col ul{margin:0;padding-left:18px}
+.col li{margin-bottom:8px}
+.stat{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:16px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tbl{overflow-x:auto}
+
+.concl{counter-reset:c;display:grid;gap:14px;margin-top:8px}
+.concl div{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:6px;padding:14px 18px 14px 20px}
+.concl b{display:block;font-size:16px;margin-bottom:4px}
+.concl p{margin:0;color:var(--muted);font-size:15px}
+.resume{margin-top:28px;padding:18px 22px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--hl);border-radius:6px;max-width:72ch}
+.resume p{margin:8px 0 0;font-size:17px}
+.resume p.q{font-weight:600}
+.note{margin-top:40px;padding:14px 18px;background:var(--teal-soft);border-radius:6px;font-size:14px;color:var(--ink)}
+.data{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:18px 0 6px}
+.data div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.data span{display:block;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
+.data strong{font-size:22px;font-weight:600}
+.data strong.bad{color:var(--red)}
+.data strong.warn{color:var(--amber)}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Étude de cas · support utilisateur</div>
+  <h1>Deux problèmes réels, deux façons de répondre</h1>
+  <p class="lede">Un utilisateur iopool cherche à partager sa piscine avec un ami, puis à comprendre une capacité de désinfection en chute. Même personne, même après-midi : d'un côté l'app iopool, de l'autre une IA générale (Claude). Un seul cas, donc de la casuistique, mais vécu tel quel.</p>
+  <div class="meta">
+    <span>Mardi 9 septembre 2026</span><span>13:39 → 14:48</span><span>App iopool 2.44.0 · iPhone</span><span>Piscine « Paradisio » · 234,6 m³</span>
+  </div>
+  <div class="legend"><i></i> Surligné en jaune : les éléments qui comptent sur chaque capture</div>
+</header>
+
+<div class="resume">
+  <div class="eyebrow">En résumé</div>
+  <p>Dans les deux cas, l'aide à l'usage de l'app comme l'aide à la chimie de l'eau, il a fallu une poignée de minutes et une quinzaine d'écrans pour arriver à quelque chose, et l'agent de support n'a jamais répondu. Chez Claude, une seule question a suffi (testé sur le cas 1). Pourtant iopool avait l'information et le contexte ; Claude n'avait ni l'un ni l'autre.</p>
+  <p class="q">La question n'est plus « que se passe-t-il ? » mais « comment agir ? ». Les cinq points de la fin sont une proposition de départ.</p>
+</div>
+
+<h2>Cas 1 · « J'ai partagé le monitoring avec un ami, je ne vois pas comment faire »</h2>
+<p class="sub">Parcours dans l'app iopool, dans l'ordre chronologique.</p>
+
+<div class="tl">
+  <figure><img src="img/faq-partager.jpg" alt=""><figcaption><span class="t">13:39 · Recherche FAQ</span>L'article « Comment partager sa piscine ? » sort en premier. La réponse existe.</figcaption></figure>
+  <figure><img src="img/aide-accessoires.jpg" alt=""><figcaption><span class="t">13:41 · Rubrique Aide</span>S'ouvre sur « Accessoires iopool », sans rapport avec la question.</figcaption></figure>
+  <figure><img src="img/support-home.jpg" alt=""><figcaption><span class="t">13:41 · Écran support</span>Cinq portes d'entrée sur un seul écran : Aide, Messages, Outil de résolution, Trouver une réponse, Envoyez-nous un message.</figcaption></figure>
+  <figure><img src="img/splash-1.jpg" alt=""><figcaption><span class="t">13:44 · Splash « AI Agent »</span>Réponse à la question : accusé de réception, délai allongé, prière de ne pas renvoyer le message. Aucune réponse au fond.</figcaption></figure>
+  <figure><img src="img/partages-appel.jpg" alt=""><figcaption><span class="t">13:59 · Écran Partages trouvé seul</span>Chemin Ma piscine → Fonctionnalités → Partages, découvert pendant un appel téléphonique de 10 min. Deux partages déjà actifs.</figcaption></figure>
+  <figure><img src="img/splash-2.jpg" alt=""><figcaption><span class="t">14:43 · Splash, 2ᵉ envoi</span>Même question renvoyée une heure plus tard : même message automatique, mot pour mot.</figcaption></figure>
+  <figure class="claude"><img src="img/claude-reponse.jpg" alt=""><figcaption><span class="t">14:46 · Claude, 1 question</span>Chemin, différence lecture seule / actions autorisées, les 3 étapes côté ami, lien vers l'article officiel help.iopool.com. Petite erreur : l'étape « Fonctionnalités » est omise.</figcaption></figure>
+  <figure class="claude"><img src="img/claude-mail.jpg" alt=""><figcaption><span class="t">14:48 · Claude, suite</span>Rédige le mail pour l'ami et rappelle que l'invitation (avec le code) doit partir de l'app.</figcaption></figure>
+</div>
+
+<div class="split">
+  <div class="col hd">
+    <h3>App iopool</h3>
+    <ul>
+      <li>L'article existe et remonte dans la recherche, mais il est concurrencé par quatre autres accès au support.</li>
+      <li>L'agent nommé « AI Agent » ne répond pas : il met en file d'attente, deux fois.</li>
+      <li>L'utilisateur trouve la fonction par lui-même, après exploration.</li>
+    </ul>
+    <div class="stat">Question posée 13:44 · invitation envoyée 14:41 · réponse de Splash : aucune à 14:48</div>
+  </div>
+  <div class="col cl">
+    <h3>Claude</h3>
+    <ul>
+      <li>Réponse complète en un échange, avec le lien vers la source iopool.</li>
+      <li>Anticipe l'étape suivante : ce que l'ami doit faire, et le mail à lui envoyer.</li>
+      <li>Ne connaît pas le compte : il ne voit pas que deux partages sont déjà en place, et se trompe d'un cran sur le chemin de menu.</li>
+    </ul>
+    <div class="stat">Question posée 14:46 · réponse immédiate · 2 secondes de réflexion affichées</div>
+  </div>
+</div>
+
+<h2>Cas 2 · Capacité de désinfection à 208 mV</h2>
+<p class="sub">Ce que l'app savait au moment du diagnostic, et ce qu'elle a demandé quand même.</p>
+
+<div class="data">
+  <div><span>ORP</span><strong class="bad">208 mV</strong></div>
+  <div><span>ORP, 6 jours plus tôt</span><strong>≈ 600 mV</strong></div>
+  <div><span>pH</span><strong class="warn">7,9</strong></div>
+  <div><span>Eau</span><strong class="warn">30,2 °C</strong></div>
+  <div><span>Dernier test languette</span><strong class="bad">01/07/2025</strong></div>
+</div>
+
+<div class="tl">
+  <figure><img src="img/alerte-7sept.jpg" alt=""><figcaption><span class="t">7 sept. · Alerte automatique</span>« Potentiel de désinfection très bas ». Première piste proposée : vérifier que la sonde est dans l'eau.</figcaption></figure>
+  <figure><img src="img/orp-courbe.jpg" alt=""><figcaption><span class="t">14:42 · Historique ORP</span>Descente régulière jeudi → dimanche, puis chute brutale dimanche → lundi (≈ 450 → ≈ 250 mV), plateau ensuite.</figcaption></figure>
+  <figure><img src="img/ph-79.jpg" alt=""><figcaption><span class="t">14:42 · pH</span>7,9, hors de la zone verte (7,1 – 7,7), avec deux pics au-dessus de 8,5 la même semaine.</figcaption></figure>
+  <figure><img src="img/ma-piscine.jpg" alt=""><figcaption><span class="t">13:58 · Ma piscine</span>Le dernier test languette enregistré date du 1ᵉʳ juillet 2025, soit 14 mois.</figcaption></figure>
+  <figure><img src="img/typeform-q1.jpg" alt=""><figcaption><span class="t">14:35 · Outil de résolution</span>Formulaire Typeform ouvert dans Safari, hors de l'app. Le contexte de la piscine n'est pas transmis.</figcaption></figure>
+  <figure><img src="img/typeform-ph.jpg" alt=""><figcaption><span class="t">14:36 · Question 6</span>« Votre pH est-il entre 7 et 7,4 ? » L'app affiche 7,9 depuis le matin.</figcaption></figure>
+  <figure><img src="img/typeform-vidange.jpg" alt=""><figcaption><span class="t">14:37 · Conclusion du formulaire</span>Stabilisant trop élevé → vidanger au minimum un tiers de l'eau (≈ 80 m³ ici), idéalement la moitié.</figcaption></figure>
+  <figure><img src="img/raison-traitement.jpg" alt=""><figcaption><span class="t">14:42 · Traitement conseillé</span>« Taux de stabilisant potentiellement trop élevé ». L'app demande une analyse manuelle pour vérifier.</figcaption></figure>
+</div>
+
+<div class="split">
+  <div class="col hd">
+    <h3>Ce que fait l'app</h3>
+    <ul>
+      <li>Sort l'utilisateur de l'app vers un formulaire générique.</li>
+      <li>Pose six questions dont au moins deux ont déjà une réponse dans ses propres données (pH, filtration).</li>
+      <li>Conclut au stabilisant sans mesure de stabilisant récente, puis recommande une vidange partielle.</li>
+      <li>Le traitement conseillé dans l'app reste au conditionnel et renvoie à un test languette.</li>
+    </ul>
+  </div>
+  <div class="col cl">
+    <h3>Ce que les données montrent</h3>
+    <ul>
+      <li>Une chute d'ORP en 24 h est peu compatible avec le stabilisant seul, qui s'accumule lentement. Elle évoque plutôt une source de chlore épuisée ou un événement ponctuel (forte fréquentation, apport d'eau, orage).</li>
+      <li>Un pH à 7,9 et une eau à 30 °C réduisent à eux seuls l'efficacité du chlore.</li>
+      <li>Ces pistes sont des hypothèses. Le point est qu'elles se lisent dans les courbes, et que l'outil ne les regarde pas.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Ce qu'on en tire</h2>
+<p class="sub">Cinq points, du moins cher au plus structurant.</p>
+<div class="concl">
+  <div><b>1. Un « AI Agent » qui n'agit pas coûte plus cher que pas d'agent.</b><p>L'étiquette promet une réponse ; un accusé de réception répété à l'identique dégrade la confiance. Le contenu existe déjà (l'article remonte en premier dans la recherche) : brancher l'agent sur le centre d'aide règle le cas 1.</p></div>
+  <div><b>2. Une seule porte d'entrée, et des boutons plutôt que des chemins.</b><p>Cinq accès au support diluent la demande. Un champ unique ; la réponse ouvre l'écran concerné (« Ouvrir Partages ») au lieu de décrire un menu, ce sur quoi même Claude s'est trompé.</p></div>
+  <div><b>3. Ne jamais redemander ce que l'app sait.</b><p>Le diagnostic part des données : tendance ORP, pH, température, date du dernier test. On ne pose que les questions que l'app ne peut pas trancher (fréquentation, apport d'eau, produit ajouté).</p></div>
+  <div><b>4. Avant de prescrire, demander la mesure qui manque.</b><p>Le dernier test languette a 14 mois. Recommander de vider 80 m³ sur cette base est prématuré, et l'app le sait puisqu'elle demande elle-même une analyse manuelle.</p></div>
+  <div><b>5. Finir le geste.</b><p>Claude a anticipé le côté de l'ami et écrit le message. L'équivalent iopool : envoyer l'invitation, ou lancer l'analyse manuelle, directement depuis la conversation.</p></div>
+</div>
+
+<div class="note">L'avantage d'iopool sur une IA générale est le contexte : la piscine, l'historique, les partages, le matériel. Dans ce cas, c'est ce contexte qui n'a pas été utilisé. Le problème n'est pas le savoir, c'est la livraison.</div>
+</div>
+
+</body>
+</html>
